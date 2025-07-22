@@ -36,7 +36,7 @@ export default function Main({ posts }: MainProps) {
                 alt="Yassine Handane"
                 width={80}
                 height={80}
-                className="h-24 w-24 rounded-full object-cover shadow-lg ring-2 ring-primary-500/20"
+                className="h-22 w-22   rounded-full object-cover shadow-lg ring-2 ring-primary-500/20"
               />
             </motion.div>
             <motion.h1
