@@ -1,0 +1,334 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/forms";
+@plugin '@tailwindcss/typography';
+@source '../node_modules/pliny';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Core theme configuration */
+@theme {
+  /* Font families */
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* Colors */
+  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
+  /* Colors - Green Theme */
+  --color-primary-50: oklch(0.971 0.013 142.5);
+  --color-primary-100: oklch(0.936 0.027 142.34);
+  --color-primary-200: oklch(0.87 0.056 143.08);
+  --color-primary-300: oklch(0.778 0.106 144.32);
+  --color-primary-400: oklch(0.658 0.165 145.85);
+  --color-primary-500: oklch(0.548 0.207 147.89);
+  --color-primary-600: oklch(0.439 0.191 150.69);
+  --color-primary-700: oklch(0.353 0.153 152.31);
+  --color-primary-800: oklch(0.282 0.12 153.18);
+  --color-primary-900: oklch(0.234 0.094 154.78);
+  --color-primary-950: oklch(0.127 0.052 155.29);
+
+  --color-gray-50: oklch(0.985 0.002 247.839);
+  --color-gray-100: oklch(0.967 0.003 264.542);
+  --color-gray-200: oklch(0.928 0.006 264.531);
+  --color-gray-300: oklch(0.872 0.01 258.338);
+  --color-gray-400: oklch(0.707 0.022 261.325);
+  --color-gray-500: oklch(0.551 0.027 264.364);
+  --color-gray-600: oklch(0.446 0.03 256.802);
+  --color-gray-700: oklch(0.373 0.034 259.733);
+  --color-gray-800: oklch(0.278 0.033 256.848);
+  --color-gray-900: oklch(0.21 0.034 264.665);
+  --color-gray-950: oklch(0.13 0.028 261.692);
+
+  /* Line heights */
+  --line-height-11: 2.75rem;
+  --line-height-12: 3rem;
+  --line-height-13: 3.25rem;
+  --line-height-14: 3.5rem;
+
+  /* Z-index values */
+  --z-60: 60;
+  --z-70: 70;
+  --z-80: 80;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  a,
+  button {
+    outline-color: var(--color-primary-500);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid;
+    border-radius: var(--radius-sm);
+    outline-color: var(--color-primary-500);
+  }
+}
+
+@layer utilities {
+  .prose {
+    & a {
+      color: var(--color-primary-500);
+      &:hover {
+        color: var(--color-primary-600);
+      }
+      & code {
+        color: var(--color-primary-400);
+      }
+    }
+    & :where(h1, h2) {
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+    }
+    & h3 {
+      font-weight: 600;
+    }
+    & :where(code):not(pre code) {
+      color: var(--color-indigo-500);
+    }
+  }
+
+  .prose-invert {
+    & a {
+      color: var(--color-primary-500);
+      &:hover {
+        color: var(--color-primary-400);
+      }
+      & code {
+        color: var(--color-primary-400);
+      }
+    }
+    & :where(h1, h2, h3, h4, h5, h6) {
+      color: var(--color-gray-100);
+    }
+  }
+}
+
+.task-list-item::before {
+  @apply hidden;
+}
+
+.task-list-item {
+  @apply list-none;
+}
+
+.footnotes {
+  @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
+}
+
+.data-footnote-backref {
+  @apply no-underline;
+}
+
+.csl-entry {
+  @apply my-5;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition:
+    background-color 600000s 0s,
+    color 600000s 0s;
+}
+
+.katex-display {
+  overflow: auto hidden;
+}
+
+.content-header-link {
+  opacity: 0;
+  margin-left: -24px;
+  padding-right: 4px;
+}
+
+.content-header:hover .content-header-link,
+.content-header-link:hover {
+  opacity: 1;
+}
+
+.linkicon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Custom highlight gradient classes */
+.bg-gradient-highlight {
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-primary-400) 40%, transparent),
+    color-mix(in srgb, var(--color-primary-400) 40%, transparent)
+  );
+  background-size: 100% 100%;
+}
+
+.bg-gradient-highlight-dark {
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-primary-400) 40%, transparent),
+    color-mix(in srgb, var(--color-primary-400) 40%, transparent)
+  );
+  background-size: 100% 100%;
+}
+
+/* KBar Search Modal Styling */
+[cmdk-root] {
+  max-width: 640px;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  box-shadow: var(--cmdk-shadow);
+  transition: transform 100ms ease;
+  outline: none;
+}
+
+.dark [cmdk-root] {
+  background: rgb(31 41 55); /* gray-800 */
+  color: white;
+}
+
+[cmdk-input] {
+  font-family: var(--font-sans);
+  border: none;
+  width: 100%;
+  font-size: 17px;
+  padding: 16px;
+  outline: none;
+  background: white;
+  margin: 0;
+  color: rgb(17 24 39); /* gray-900 */
+}
+
+.dark [cmdk-input] {
+  background: rgb(31 41 55); /* gray-800 */
+  color: rgb(243 244 246); /* gray-100 */
+}
+
+[cmdk-input]::placeholder {
+  color: rgb(156 163 175); /* gray-400 */
+}
+
+[cmdk-list] {
+  max-height: 300px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  transition: 100ms ease;
+  transition-property: height;
+}
+
+[cmdk-list-sizer] {
+  padding: 8px;
+}
+
+[cmdk-item] {
+  content-visibility: auto;
+  cursor: pointer;
+  height: 48px;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  color: rgb(55 65 81); /* gray-700 */
+  user-select: none;
+  will-change: background, color;
+  transition: all 150ms ease;
+  transition-property: none;
+}
+
+.dark [cmdk-item] {
+  color: rgb(209 213 219); /* gray-300 */
+}
+
+[cmdk-item][data-selected='true'] {
+  background: var(--color-primary-500);
+  color: white;
+}
+
+[cmdk-item][data-disabled='true'] {
+  color: rgb(156 163 175); /* gray-400 */
+  cursor: not-allowed;
+}
+
+[cmdk-item]:active {
+  transition-property: background;
+  background: rgb(229 231 235); /* gray-200 */
+}
+
+.dark [cmdk-item]:active {
+  background: rgb(55 65 81); /* gray-700 */
+}
+
+[cmdk-item] + [cmdk-item] {
+  margin-top: 4px;
+}
+
+[cmdk-item] svg {
+  width: 18px;
+  height: 18px;
+}
+
+[cmdk-separator] {
+  height: 1px;
+  width: 100%;
+  background: rgb(229 231 235); /* gray-200 */
+  margin: 4px 0;
+}
+
+.dark [cmdk-separator] {
+  background: rgb(55 65 81); /* gray-700 */
+}
+
+*:not([hidden]) + [cmdk-group] {
+  margin-top: 8px;
+}
+
+[cmdk-group-heading] {
+  user-select: none;
+  font-size: 12px;
+  color: var(--color-primary-500);
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[cmdk-empty] {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  white-space: pre-wrap;
+  color: rgb(156 163 175); /* gray-400 */
+}
+
