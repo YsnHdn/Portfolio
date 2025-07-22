@@ -13,7 +13,7 @@ const siteMetadata = {
   mastodon: 'https://mastodon.social/@yassinehandane',
   email: 'y.handane@gmail.com',
   github: 'https://github.com/YsnHdn',
-  x: 'https://x.com/YsnHdn',
+  x: 'https://x.com/Ysn_Hdn',
   linkedin: 'https://www.linkedin.com/in/yassine-handane/',
   medium: 'https://medium.com/@YsnHdn',
   locale: 'en-US',
