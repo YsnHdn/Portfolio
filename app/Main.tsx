@@ -1,6 +1,7 @@
 'use client'
 
 import Link from '@/components/Link'
+import Image from '@/components/Image'
 import siteMetadata from '@/data/siteMetadata'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
 import { motion } from 'framer-motion'
@@ -22,14 +23,32 @@ export default function Main({ posts }: MainProps) {
         className="flex flex-col items-start justify-between gap-8 space-y-2 pt-6 pb-8 md:flex-row md:space-y-5"
       >
         <div className="flex-1">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-6 text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
-          >
-            Hi, I'm <span className="text-primary-500 dark:text-primary-400">Yassine</span>
-          </motion.h1>
+          {/* Avatar + Title Section */}
+          <div className="mb-6 flex items-center gap-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex-shrink-0"
+            >
+              <Image
+                src="/static/images/avatar.png"
+                alt="Yassine Handane"
+                width={80}
+                height={80}
+                className="h-24 w-24 rounded-full object-cover shadow-lg ring-2 ring-primary-500/20"
+              />
+            </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
+            >
+              Hi, I'm <span className="text-primary-500 dark:text-primary-400">Yassine</span>
+            </motion.h1>
+          </div>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
