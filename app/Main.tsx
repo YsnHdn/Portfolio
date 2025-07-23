@@ -10,7 +10,13 @@ import AnimatedLatestPost from '@/components/AnimatedLatestPost'
 const MAX_DISPLAY = 5
 
 interface MainProps {
-  posts: any[]
+  posts: {
+    slug: string
+    title: string
+    date: string
+    summary: string
+    tags?: string[]
+  }[]
 }
 
 export default function Main({ posts }: MainProps) {
@@ -36,7 +42,7 @@ export default function Main({ posts }: MainProps) {
                 alt="Yassine Handane"
                 width={80}
                 height={80}
-                className="h-22 w-22   rounded-full object-cover shadow-lg ring-2 ring-primary-500/20"
+                className="mr-3 h-20 w-20 rounded-full object-cover shadow-lg ring-2 ring-primary-500/20"
               />
             </motion.div>
             <motion.h1
@@ -64,7 +70,8 @@ export default function Main({ posts }: MainProps) {
             </span>{' '}
             sharing insights about{' '}
             <span className="font-medium text-gray-700 dark:text-gray-300">AI</span>,{' '}
-            <span className="font-medium text-gray-700 dark:text-gray-300">machine learning</span>, and{' '}
+            <span className="font-medium text-gray-700 dark:text-gray-300">machine learning</span>,
+            and{' '}
             <span className="font-medium text-gray-700 dark:text-gray-300">
               innovative research
             </span>
@@ -95,7 +102,8 @@ export default function Main({ posts }: MainProps) {
             >
               research insights, technical discoveries & AI innovations
             </motion.span>
-            . Join me on this journey of continuous learning and exploration in the world of data science.{' '}
+            . Join me on this journey of continuous learning and exploration in the world of data
+            science.{' '}
             <span className="font-medium text-gray-700 dark:text-gray-300">Have a great read!</span>
           </motion.p>
 
