@@ -8,7 +8,6 @@ import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { track } from 'pliny/analytics'
 
 const Header = () => {
   const pathname = usePathname()
@@ -23,30 +22,6 @@ const Header = () => {
     return () => clearInterval(cursorInterval)
   }, [])
 
-  const handleLogoClick = () => {
-    track('navigation_click', {
-      destination: '/',
-      source: 'header',
-      element: 'logo'
-    })
-  }
-
-  const handleNavClick = (href: string, title: string) => {
-    track('navigation_click', {
-      destination: href,
-      source: 'header',
-      element: 'nav_link',
-      link_text: title
-    })
-  }
-
-  const handleSearchClick = () => {
-    track('search_interaction', {
-      action: 'search_button_click',
-      source: 'header'
-    })
-  }
-
   let headerClass = 'flex items-center w-full bg-white dark:bg-gray-950 justify-between py-10'
   if (siteMetadata.stickyNav) {
     headerClass += ' sticky top-0 z-50'
@@ -54,7 +29,7 @@ const Header = () => {
 
   return (
     <header className={headerClass}>
-      <Link href="/" aria-label={siteMetadata.headerTitle} onClick={handleLogoClick}>
+      <Link href="/" aria-label={siteMetadata.headerTitle}>
         <div className="flex items-center">
           <div className="text-lg font-medium text-gray-900 dark:text-gray-100">
             <span>{currentPath}</span>
@@ -72,16 +47,13 @@ const Header = () => {
             <Link
               key={link.title}
               href={link.href}
-              onClick={() => handleNavClick(link.href, link.title)}
               className="hover:text-primary-500 dark:hover:text-primary-400 m-1 font-medium text-gray-900 dark:text-gray-100"
             >
               {link.title}
             </Link>
           ))}
         </div>
-        <div onClick={handleSearchClick}>
-          <SearchButton />
-        </div>
+        <SearchButton />
         <ThemeSwitch />
         <MobileNav />
       </div>
