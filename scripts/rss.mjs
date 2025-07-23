@@ -7,7 +7,6 @@ import { sortPosts } from 'pliny/utils/contentlayer.js'
 
 const outputFolder = process.env.EXPORT ? 'out' : 'public'
 
-// Custom escape function that safely handles null/undefined values
 const escape = (str) => {
   if (!str) return ''
   return str
@@ -47,15 +46,19 @@ const generateRss = (config, posts, page = 'feed.xml') => `
 `
 
 async function generateRSS(config, allBlogs, page = 'feed.xml') {
+  // Vérifier que allBlogs existe et n'est pas vide
+  if (!allBlogs || !Array.isArray(allBlogs) || allBlogs.length === 0) {
+    console.log('No blog posts found, skipping RSS generation')
+    return
+  }
+
   const publishPosts = allBlogs.filter((post) => post.draft !== true)
   
-  // RSS for blog post
   if (publishPosts.length > 0) {
     const rss = generateRss(config, sortPosts(publishPosts))
     writeFileSync(`./${outputFolder}/${page}`, rss)
   }
 
-  // RSS for each tag
   if (publishPosts.length > 0) {
     for (const tag of Object.keys(tagData)) {
       const filteredPosts = allBlogs.filter((post) => 
