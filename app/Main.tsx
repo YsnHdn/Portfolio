@@ -226,7 +226,9 @@ export default function Main({ posts }: MainProps) {
             <NewsletterForm title="Subscribe to the newsletter" />
           </div>
         </motion.div>
+        
       )}
+      
     </>
   )
 }
