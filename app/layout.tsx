@@ -1,4 +1,4 @@
-import 'css/tailwind.css'
+import '@/css/tailwind.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
 
@@ -70,19 +70,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <link
         rel="apple-touch-icon"
         sizes="76x76"
-        href={`${basePath}/static/favicons/Logo.png`}
+        href={`${basePath}/static/favicons/apple-touch-icon.png`}
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href={`${basePath}/static/favicons/Logo.png`}
+        href={`${basePath}/static/favicons/favicon-32x32.png`}
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href={`${basePath}/static/favicons/Logo.png`}
+        href={`${basePath}/static/favicons/favicon-16x16.png`}
       />
       <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
       <link
@@ -96,7 +96,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
       <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
         <ThemeProviders>
+          {/* Google Analytics */}
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
+          
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
@@ -104,6 +106,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </SearchProvider>
             <Footer />
           </SectionContainer>
+          
+          {/* Vercel Analytics */}
           <VercelAnalytics />
         </ThemeProviders>
       </body>

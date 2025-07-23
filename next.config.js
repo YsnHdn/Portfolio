@@ -6,11 +6,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' giscus.app analytics.umami.is;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' giscus.app analytics.umami.is *.googletagmanager.com *.google-analytics.com;
   style-src 'self' 'unsafe-inline';
-  img-src * blob: data:;
+  img-src * blob: data: *.google-analytics.com *.googletagmanager.com;
   media-src 'none';
-  connect-src *;
+  connect-src * *.google-analytics.com *.analytics.google.com *.googletagmanager.com;
   font-src 'self';
   frame-src giscus.app
 `
@@ -53,10 +53,10 @@ module.exports = () => {
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     eslint: {
       dirs: ['app', 'components', 'data', 'layouts', 'scripts'],
-      ignoreDuringBuilds: true, // ✅ Ignore ESLint pendant le build
+      ignoreDuringBuilds: true,
     },
     typescript: {
-      ignoreBuildErrors: true, // ✅ Ignore TypeScript pendant le build
+      ignoreBuildErrors: true,
     },
     async headers() {
       return [
@@ -80,10 +80,10 @@ module.exports = () => {
           has: [
             {
               type: 'host',
-              value: 'www.yassinehandane.me',
+              value: 'www.yassine-handane.vercel.app',
             },
           ],
-          destination: 'https://yassinehandane.me/:path*',
+          destination: 'https://yassine-handane.vercel.app/:path*',
           permanent: true,
         },
       ]
