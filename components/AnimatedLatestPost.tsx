@@ -7,7 +7,7 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import { track } from '@/lib/analytics'
+import { track } from '../lib/analytics'
 
 interface AnimatedLatestPostProps {
   post: CoreContent<Blog>

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { slug } from 'github-slugger'
-import { track } from '@/lib/analytics'
+import { track } from '../lib/analytics'
 
 interface Props {
   text: string

@@ -8,7 +8,7 @@ import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { track } from '@/lib/analytics'
+import { track } from '../lib/analytics'
 
 const Header = () => {
   const pathname = usePathname()

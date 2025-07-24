@@ -6,7 +6,7 @@ import siteMetadata from '@/data/siteMetadata'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
 import { motion } from 'framer-motion'
 import AnimatedLatestPost from '@/components/AnimatedLatestPost'
-import { track } from '@/lib/analytics'
+import { track } from '../lib/analytics'
 
 const MAX_DISPLAY = 5
 
