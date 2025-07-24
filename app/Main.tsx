@@ -6,6 +6,7 @@ import siteMetadata from '@/data/siteMetadata'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
 import { motion } from 'framer-motion'
 import AnimatedLatestPost from '@/components/AnimatedLatestPost'
+import { track } from '@/lib/analytics'
 
 const MAX_DISPLAY = 5
 
@@ -20,6 +21,47 @@ interface MainProps {
 }
 
 export default function Main({ posts }: MainProps) {
+  // Fonctions de tracking
+  const handleBlogClick = () => {
+    track('navigation_click', {
+      destination: '/blog',
+      source: 'homepage',
+      button: 'read_my_blog'
+    })
+  }
+
+  const handleTagsClick = () => {
+    track('navigation_click', {
+      destination: '/tags',
+      source: 'homepage', 
+      button: 'explore_topics'
+    })
+  }
+
+  const handleExperiencesClick = () => {
+    track('navigation_click', {
+      destination: '/experiences',
+      source: 'homepage',
+      button: 'my_journey'
+    })
+  }
+
+  const handleAboutClick = () => {
+    track('navigation_click', {
+      destination: '/about',
+      source: 'homepage',
+      button: 'learn_about_me'
+    })
+  }
+
+  const handleAllPostsClick = () => {
+    track('content_engagement', {
+      action: 'view_all_posts',
+      source: 'homepage',
+      content_type: 'blog_posts'
+    })
+  }
+
   return (
     <>
       <motion.div
@@ -148,24 +190,28 @@ export default function Main({ posts }: MainProps) {
         >
           <Link
             href="/blog"
+            onClick={handleBlogClick}
             className="hover:bg-primary-500 dark:hover:bg-primary-500 rounded-lg bg-gray-100 px-6 py-2.5 text-center font-medium text-gray-900 transition-all duration-200 hover:text-white dark:bg-gray-800 dark:text-gray-100"
           >
             Read My Blog
           </Link>
           <Link
             href="/tags"
+            onClick={handleTagsClick}
             className="hover:bg-primary-500 dark:hover:bg-primary-500 rounded-lg bg-gray-100 px-6 py-2.5 text-center font-medium text-gray-900 transition-all duration-200 hover:text-white dark:bg-gray-800 dark:text-gray-100"
           >
             Explore Topics
           </Link>
           <Link
             href="/experiences"
+            onClick={handleExperiencesClick}
             className="hover:bg-primary-500 dark:hover:bg-primary-500 rounded-lg bg-gray-100 px-6 py-2.5 text-center font-medium text-gray-900 transition-all duration-200 hover:text-white dark:bg-gray-800 dark:text-gray-100"
           >
             My Journey
           </Link>
           <Link
             href="/about"
+            onClick={handleAboutClick}
             className="hover:bg-primary-500 dark:hover:bg-primary-500 rounded-lg bg-gray-100 px-6 py-2.5 text-center font-medium text-gray-900 transition-all duration-200 hover:text-white dark:bg-gray-800 dark:text-gray-100"
           >
             Learn About Me
@@ -208,6 +254,7 @@ export default function Main({ posts }: MainProps) {
         >
           <Link
             href="/blog"
+            onClick={handleAllPostsClick}
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label="All posts"
           >
@@ -226,9 +273,7 @@ export default function Main({ posts }: MainProps) {
             <NewsletterForm title="Subscribe to the newsletter" />
           </div>
         </motion.div>
-        
       )}
-      
     </>
   )
 }
