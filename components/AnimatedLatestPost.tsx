@@ -81,8 +81,7 @@ export default function AnimatedLatestPost({ post, index }: AnimatedLatestPostPr
                   {tags?.map((tag) => (
                     <Tag 
                       key={tag} 
-                      text={tag} 
-                      onClick={() => handleTagClick(tag)}
+                      text={tag}
                     />
                   ))}
                 </motion.div>
