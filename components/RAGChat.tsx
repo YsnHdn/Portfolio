@@ -40,6 +40,18 @@ export default function RAGChat() {
     }
   }, [chatSize])
 
+  // Gérer la touche ESC pour fermer le chat
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && chatSize !== 'minimized') {
+        setChatSize('minimized')
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [chatSize])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -153,10 +165,17 @@ export default function RAGChat() {
       case 'expanded':
         return 'h-[700px] w-[450px]'
       case 'fullscreen':
-        return 'h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-6xl'
+        return 'h-[85vh] w-full max-w-5xl'
       default:
         return 'h-[500px] w-[380px]'
     }
+  }
+
+  const getChatPosition = () => {
+    if (chatSize === 'fullscreen') {
+      return 'fixed inset-0 flex items-center justify-center z-50 p-4 sm:p-6'
+    }
+    return 'fixed bottom-24 right-6 z-[45]'
   }
 
   const formatTime = (date: Date) => {
@@ -168,7 +187,7 @@ export default function RAGChat() {
       {/* Bouton flottant - Toujours visible */}
       <motion.button
         onClick={() => setChatSize(chatSize === 'minimized' ? 'normal' : 'minimized')}
-        className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-2xl transition-all hover:scale-110 hover:shadow-primary-500/50 dark:from-primary-600 dark:to-primary-700"
+        className="fixed bottom-6 right-6 z-[60] flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-2xl transition-all hover:scale-110 hover:shadow-primary-500/50 dark:from-primary-600 dark:to-primary-700"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         aria-label={chatSize === 'minimized' ? 'Ouvrir le chat' : 'Fermer le chat'}
@@ -235,16 +254,31 @@ export default function RAGChat() {
         )}
       </motion.button>
 
+      {/* Backdrop pour le mode fullscreen */}
+      <AnimatePresence>
+        {chatSize === 'fullscreen' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setChatSize('normal')}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Fenêtre de chat */}
       <AnimatePresence>
         {chatSize !== 'minimized' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 25 }}
-            className={`fixed ${chatSize === 'fullscreen' ? 'inset-4' : 'bottom-24 right-6'} z-40 flex flex-col rounded-2xl border border-gray-200 bg-white shadow-2xl backdrop-blur-xl transition-all dark:border-gray-700 dark:bg-gray-900 ${getChatDimensions()}`}
-          >
+          <div className={getChatPosition()}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`flex flex-col rounded-2xl border border-gray-200 bg-white shadow-2xl backdrop-blur-xl transition-all dark:border-gray-700 dark:bg-gray-900 ${getChatDimensions()}`}
+            >
             {/* En-tête */}
             <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-primary-500 to-primary-600 px-5 py-4 dark:from-primary-600 dark:to-primary-700">
               <div className="flex items-center gap-3">
@@ -454,7 +488,8 @@ export default function RAGChat() {
                 </div>
               )}
             </form>
-          </motion.div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>
