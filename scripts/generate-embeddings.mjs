@@ -157,6 +157,44 @@ async function getExperiences() {
   return experiences
 }
 
+// Fonction pour lire les informations de l'auteur (page About)
+async function getAuthorInfo() {
+  const authorsDir = path.join(__dirname, '../data/authors')
+  const files = fs.readdirSync(authorsDir).filter((file) => file.endsWith('.mdx') || file.endsWith('.md'))
+
+  const authors = []
+
+  for (const file of files) {
+    const filePath = path.join(authorsDir, file)
+    const fileContent = fs.readFileSync(filePath, 'utf-8')
+    const { data, content } = matter(fileContent)
+
+    const slug = file.replace(/\.(mdx|md)$/, '')
+    const fullText = `About ${data.name}
+
+Position: ${data.occupation} at ${data.company}
+Education & Background: ${content}
+
+Contact:
+- Email: ${data.email}
+- LinkedIn: ${data.linkedin || ''}
+- GitHub: ${data.github || ''}
+- Twitter: ${data.twitter || ''}`
+
+    authors.push({
+      id: `author-${slug}`,
+      content: prepareText(fullText),
+      metadata: {
+        type: 'about',
+        title: `About ${data.name}`,
+        url: '/about',
+      },
+    })
+  }
+
+  return authors
+}
+
 // Fonction principale
 async function main() {
   console.log('🚀 Génération des embeddings avec Google Gemini (GRATUIT)...\n')
@@ -175,11 +213,13 @@ async function main() {
     const blogPosts = await getBlogPosts()
     const projects = await getProjects()
     const experiences = await getExperiences()
+    const authorInfo = await getAuthorInfo()
 
-    const allDocuments = [...blogPosts, ...projects, ...experiences]
+    const allDocuments = [...blogPosts, ...projects, ...experiences, ...authorInfo]
     console.log(`   - ${blogPosts.length} blog posts`)
     console.log(`   - ${projects.length} projets`)
     console.log(`   - ${experiences.length} expériences`)
+    console.log(`   - ${authorInfo.length} page(s) about`)
     console.log(`   Total: ${allDocuments.length} documents\n`)
 
     // Générer les embeddings
