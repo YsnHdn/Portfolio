@@ -3,17 +3,29 @@
 /**
  * Script pour générer les embeddings du contenu (blog posts, projets, expériences)
  * et les sauvegarder dans un fichier JSON
+ *
+ * Utilise OpenRouter pour générer les embeddings
  */
 
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import matter from 'gray-matter'
-import { openai } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai'
 import { embed } from 'ai'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// Configuration OpenRouter
+const openrouter = createOpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY || '',
+  baseURL: 'https://openrouter.ai/api/v1',
+  headers: {
+    'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || '',
+    'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Portfolio',
+  },
+})
 
 const EMBEDDING_MODEL = 'text-embedding-3-small'
 const OUTPUT_FILE = path.join(__dirname, '../public/embeddings.json')
@@ -21,7 +33,7 @@ const OUTPUT_FILE = path.join(__dirname, '../public/embeddings.json')
 // Fonction pour générer un embedding
 async function generateEmbedding(text) {
   const { embedding } = await embed({
-    model: openai.embedding(EMBEDDING_MODEL),
+    model: openrouter.embedding(EMBEDDING_MODEL),
     value: text,
   })
   return embedding
@@ -136,11 +148,12 @@ async function getExperiences() {
 
 // Fonction principale
 async function main() {
-  console.log('🚀 Génération des embeddings...\n')
+  console.log('🚀 Génération des embeddings avec OpenRouter...\n')
 
-  // Vérifier que la clé API OpenAI est définie
-  if (!process.env.OPENAI_API_KEY) {
-    console.error('❌ Erreur: OPENAI_API_KEY n\'est pas défini dans les variables d\'environnement')
+  // Vérifier que la clé API OpenRouter est définie
+  if (!process.env.OPENROUTER_API_KEY) {
+    console.error('❌ Erreur: OPENROUTER_API_KEY n\'est pas défini dans les variables d\'environnement')
+    console.error('   Créez un fichier .env.local avec: OPENROUTER_API_KEY=votre_clé')
     process.exit(1)
   }
 
@@ -177,7 +190,7 @@ async function main() {
 
       // Petit délai pour éviter de dépasser les limites de taux
       if (i < allDocuments.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise((resolve) => setTimeout(resolve, 200))
       }
     }
 
@@ -187,6 +200,7 @@ async function main() {
     console.log(`   ✅ Sauvegardé dans ${OUTPUT_FILE}`)
 
     console.log(`\n✨ Terminé! ${embeddedDocuments.length} documents avec embeddings générés.`)
+    console.log(`\n📊 Prochaine étape: Lancez votre application avec 'yarn dev'`)
   } catch (error) {
     console.error('\n❌ Erreur:', error)
     process.exit(1)

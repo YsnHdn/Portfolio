@@ -1,7 +1,7 @@
-import { openai } from '@ai-sdk/openai'
 import { streamText } from 'ai'
 import { VectorStore } from '@/lib/rag/vectorStore'
 import { generateEmbedding } from '@/lib/rag/embeddings'
+import { openrouter, MODELS, checkApiKey } from '@/lib/rag/config'
 import type { EmbeddedDocument } from '@/lib/rag/types'
 import fs from 'fs'
 import path from 'path'
@@ -42,9 +42,9 @@ export async function POST(req: Request) {
       return new Response('Message invalide', { status: 400 })
     }
 
-    // Vérifier la clé API OpenAI
-    if (!process.env.OPENAI_API_KEY) {
-      return new Response('OPENAI_API_KEY non configuré', { status: 500 })
+    // Vérifier la clé API OpenRouter
+    if (!checkApiKey()) {
+      return new Response('OPENROUTER_API_KEY non configuré', { status: 500 })
     }
 
     // Charger le vector store
@@ -79,22 +79,23 @@ ${document.content}
 
     // Générer la réponse avec streaming
     const result = streamText({
-      model: openai('gpt-4o-mini'),
-      system: `Tu es un assistant spécialisé pour répondre aux questions sur le portfolio, les projets et le blog de Yassine Handane.
+      model: openrouter(MODELS.chat),
+      system: `Tu es un assistant spécialisé pour répondre aux questions sur le portfolio, les projets et le blog de Yassine Handane, un ingénieur AI/ML passionné.
 
 Utilise UNIQUEMENT les informations fournies dans le contexte ci-dessous pour répondre à la question de l'utilisateur.
 
-Si la question n'a pas de réponse dans le contexte, dis-le poliment et suggère des sujets sur lesquels tu peux aider.
+Si la question n'a pas de réponse dans le contexte, dis-le poliment et suggère des sujets sur lesquels tu peux aider (projets AI/ML, expériences, articles de blog sur l'IA, etc.).
 
 Contexte:
 ${context}
 
 Règles:
 - Réponds en français si la question est en français, en anglais si elle est en anglais
-- Sois concis et précis
+- Sois concis, précis et professionnel
 - Cite les sources (titres des articles/projets) quand pertinent
 - Si tu mentionnes un article ou projet, inclus l'URL si disponible
-- Reste professionnel et informatif`,
+- Reste professionnel et informatif
+- Montre l'expertise de Yassine en AI/ML dans tes réponses`,
       prompt: message,
       temperature: 0.7,
       maxTokens: 1000,

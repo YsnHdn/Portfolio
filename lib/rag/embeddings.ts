@@ -1,10 +1,7 @@
-// Utilitaires pour générer des embeddings
+// Utilitaires pour générer des embeddings avec OpenRouter
 
-import { openai } from '@ai-sdk/openai'
 import { embed } from 'ai'
-
-// Modèle d'embedding à utiliser
-const EMBEDDING_MODEL = 'text-embedding-3-small'
+import { openrouter, MODELS } from './config'
 
 /**
  * Générer un embedding pour un texte donné
@@ -12,7 +9,7 @@ const EMBEDDING_MODEL = 'text-embedding-3-small'
 export async function generateEmbedding(text: string): Promise<number[]> {
   try {
     const { embedding } = await embed({
-      model: openai.embedding(EMBEDDING_MODEL),
+      model: openrouter.embedding(MODELS.embedding),
       value: text,
     })
     return embedding
