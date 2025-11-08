@@ -5,6 +5,53 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@ai-sdk/gateway@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@ai-sdk/gateway@npm:2.0.7"
+  dependencies:
+    "@ai-sdk/provider": 2.0.0
+    "@ai-sdk/provider-utils": 3.0.16
+    "@vercel/oidc": 3.0.3
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 12129846a82f894bc5d5e45dd724d65dc4c845bb80a3e5a55ed16927528d9ae3ea54cab63641875f81d882423dbc1a150c171bc4c737a48b45335734cc82d6ca
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/openai@npm:^2.0.64":
+  version: 2.0.64
+  resolution: "@ai-sdk/openai@npm:2.0.64"
+  dependencies:
+    "@ai-sdk/provider": 2.0.0
+    "@ai-sdk/provider-utils": 3.0.16
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 26cdeeb76ea934189af65e6846787b09bd14271b5701da70ccb40853d4e895ec6d624ca9523d3f3301376c4dc043423372067c47d508676ec5652f5d86b87d51
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider-utils@npm:3.0.16":
+  version: 3.0.16
+  resolution: "@ai-sdk/provider-utils@npm:3.0.16"
+  dependencies:
+    "@ai-sdk/provider": 2.0.0
+    "@standard-schema/spec": ^1.0.0
+    eventsource-parser: ^3.0.6
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 5d9071f9e5acf79361c2c9c2df43bc4e7b0c40fb47c73b263bbf930a208b766dd22321a2cb8266659e4c0b590e3004fbcc9199d426621c42aed982da30f33442
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@ai-sdk/provider@npm:2.0.0"
+  dependencies:
+    json-schema: ^0.4.0
+  checksum: 6068b327d48d37a5cb994652c29af4206f228c1fd1e5ab38f2db860b5b6ec3e1e7c75a2fab98e633fec59dc7f0ac6f115ce68aad66175264b263509928c67b91
+  languageName: node
+  linkType: hard
+
 "@algolia/autocomplete-core@npm:1.17.9":
   version: 1.17.9
   resolution: "@algolia/autocomplete-core@npm:1.17.9"
@@ -2972,7 +3019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api@npm:^1.3.0, @opentelemetry/api@npm:^1.9.0":
+"@opentelemetry/api@npm:1.9.0, @opentelemetry/api@npm:^1.3.0, @opentelemetry/api@npm:^1.9.0":
   version: 1.9.0
   resolution: "@opentelemetry/api@npm:1.9.0"
   checksum: 9e88e59d53ced668f3daaecfd721071c5b85a67dd386f1c6f051d1be54375d850016c881f656ffbe9a03bedae85f7e89c2f2b635313f9c9b195ad033cdc31020
@@ -3442,6 +3489,13 @@ __metadata:
   version: 1.12.0
   resolution: "@rushstack/eslint-patch@npm:1.12.0"
   checksum: 186788a93e2f141f622696091a593727fe7964d4925236a308e29754e29dcb182377f8d292ae954d227fb0574433863af055c0156593a40fd525e88b76e891ec
+  languageName: node
+  linkType: hard
+
+"@standard-schema/spec@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@standard-schema/spec@npm:1.0.0"
+  checksum: 2d7d73a1c9706622750ab06fc40ef7c1d320b52d5e795f8a1c7a77d0d6a9f978705092bc4149327b3cff4c9a14e5b3800d3b00dc945489175a2d3031ded8332a
   languageName: node
   linkType: hard
 
@@ -4310,6 +4364,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/oidc@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@vercel/oidc@npm:3.0.3"
+  checksum: 0233e480e6eebfe23ab8a077e04b8c3dccd9870e59ffd76ad089580b8a4b5fd10e5952c36aeb01bce5ad1188be30a53637aebc4f93dc5a7b5ba80055e70b1439
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^3.0.0":
   version: 3.0.1
   resolution: "abbrev@npm:3.0.1"
@@ -4348,6 +4409,20 @@ __metadata:
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
   checksum: 86a7f542af277cfbd77dd61e7df8422f90bac512953709003a1c530171a9d019d072e2400eab2b59f84b49ab9dd237be44315ca663ac73e82b3922d10ea5eafa
+  languageName: node
+  linkType: hard
+
+"ai@npm:^5.0.89":
+  version: 5.0.89
+  resolution: "ai@npm:5.0.89"
+  dependencies:
+    "@ai-sdk/gateway": 2.0.7
+    "@ai-sdk/provider": 2.0.0
+    "@ai-sdk/provider-utils": 3.0.16
+    "@opentelemetry/api": 1.9.0
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: b4bb60cadc1b9305eac08cf050b5ed1aabe168d30ebdabda8f12812a5105309275f99ba28b3273663773d323bc20231e08b04cffeacd54e5a360fd34c99a0a10
   languageName: node
   linkType: hard
 
@@ -6459,6 +6534,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eventsource-parser@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "eventsource-parser@npm:3.0.6"
+  checksum: b90ec27f8d992afa7df171db202faaedb1782214f64e50690cbf78bc2629f7751575aa27a72d8ae447e5a7094938406b1a3ea1d89e5f0f2d6916cc8a694b6587
+  languageName: node
+  linkType: hard
+
 "execa@npm:7.2.0":
   version: 7.2.0
   resolution: "execa@npm:7.2.0"
@@ -8063,6 +8145,13 @@ __metadata:
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
   checksum: 7486074d3ba247769fda17d5181b345c9fb7d12e0da98b22d1d71a5db9698d8b4bd900a3ec1a4ffdd60846fc2556274a5c894d0c48795f14cb03aeae7b55260b
+  languageName: node
+  linkType: hard
+
+"json-schema@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "json-schema@npm:0.4.0"
+  checksum: 66389434c3469e698da0df2e7ac5a3281bcff75e797a5c127db7c5b56270e01ae13d9afa3c03344f76e32e81678337a8c912bdbb75101c62e487dc3778461d72
   languageName: node
   linkType: hard
 
@@ -12016,6 +12105,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tailwind-nextjs-starter-blog@workspace:."
   dependencies:
+    "@ai-sdk/openai": ^2.0.64
     "@emotion/is-prop-valid": ^1.3.1
     "@eslint/eslintrc": ^3.2.0
     "@eslint/js": ^9.16.0
@@ -12030,6 +12120,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^8.12.0
     "@typescript-eslint/parser": ^8.12.0
     "@vercel/analytics": ^1.5.0
+    ai: ^5.0.89
     body-scroll-lock: ^4.0.0-beta.0
     contentlayer2: 0.5.5
     cross-env: ^7.0.3
@@ -12070,6 +12161,7 @@ __metadata:
     tailwindcss: ^4.0.5
     typescript: ^5.1.3
     unist-util-visit: ^5.0.0
+    zod: ^4.1.12
   languageName: unknown
   linkType: soft
 
@@ -12938,6 +13030,13 @@ __metadata:
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: c9a403a62b329188a5f6bd24d5d935d2bba345f7ab8151d1baa1505b5da9f227fb139354b043711490c798e91f3df75991395e40142e6510a4b16409f302b849
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.1.12":
+  version: 4.1.12
+  resolution: "zod@npm:4.1.12"
+  checksum: 91174acc7d2ca5572ad522643474ddd60640cf6877b5d76e5d583eb25e3c4072c6f5eb92ab94f231ec5ce61c6acdfc3e0166de45fb1005b1ea54986b026b765f
   languageName: node
   linkType: hard
 

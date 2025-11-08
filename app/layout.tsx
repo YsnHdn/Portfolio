@@ -13,6 +13,7 @@ import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
 import { Analytics as VercelAnalytics } from '@vercel/analytics/next'
 import Script from 'next/script'
+import RAGChat from '@/components/RAGChat'
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -132,6 +133,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           
           {/* Vercel Analytics */}
           <VercelAnalytics />
+
+          {/* RAG Chat Assistant */}
+          <RAGChat />
         </ThemeProviders>
       </body>
     </html>

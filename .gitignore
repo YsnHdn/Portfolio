@@ -28,6 +28,9 @@ public/sitemap.xml
 # search
 /public/search.json
 
+# RAG embeddings
+/public/embeddings.json
+
 # misc
 .DS_Store
 
