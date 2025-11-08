@@ -13,9 +13,13 @@ import { fileURLToPath } from 'url'
 import matter from 'gray-matter'
 import { createOpenAI } from '@ai-sdk/openai'
 import { embed } from 'ai'
+import dotenv from 'dotenv'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// Charger les variables d'environnement depuis .env.local
+dotenv.config({ path: path.join(__dirname, '../.env.local') })
 
 // Configuration OpenRouter
 const openrouter = createOpenAI({
