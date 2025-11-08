@@ -14,8 +14,8 @@ export const openrouter = createOpenAI({
 
 // Modèles recommandés pour OpenRouter
 export const MODELS = {
-  // Pour les embeddings
-  embedding: 'text-embedding-3-small', // OpenAI via OpenRouter
+  // Pour les embeddings - IMPORTANT : Préfixer avec openai/ pour OpenRouter
+  embedding: 'openai/text-embedding-3-small', // OpenAI via OpenRouter
 
   // Pour la génération de texte (vous pouvez choisir parmi ces options)
   chat: 'openai/gpt-4o-mini', // Rapide et économique

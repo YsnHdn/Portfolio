@@ -31,7 +31,8 @@ const openrouter = createOpenAI({
   },
 })
 
-const EMBEDDING_MODEL = 'text-embedding-3-small'
+// IMPORTANT : Préfixer avec openai/ pour OpenRouter
+const EMBEDDING_MODEL = 'openai/text-embedding-3-small'
 const OUTPUT_FILE = path.join(__dirname, '../public/embeddings.json')
 
 // Fonction pour générer un embedding
