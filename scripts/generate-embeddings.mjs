@@ -4,7 +4,7 @@
  * Script pour générer les embeddings du contenu (blog posts, projets, expériences)
  * et les sauvegarder dans un fichier JSON
  *
- * Utilise OpenAI pour les embeddings (API directe)
+ * Utilise Google Gemini pour les embeddings (API directe - GRATUIT)
  */
 
 import fs from 'fs'
@@ -19,30 +19,35 @@ const __dirname = path.dirname(__filename)
 // Charger les variables d'environnement depuis .env.local
 dotenv.config({ path: path.join(__dirname, '../.env.local') })
 
-const EMBEDDING_MODEL = 'text-embedding-3-small'
+const EMBEDDING_MODEL = 'text-embedding-004'
 const OUTPUT_FILE = path.join(__dirname, '../public/embeddings.json')
 
-// Fonction pour générer un embedding avec l'API OpenAI directement
+// Fonction pour générer un embedding avec l'API Google Gemini directement
 async function generateEmbedding(text) {
-  const response = await fetch('https://api.openai.com/v1/embeddings', {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${EMBEDDING_MODEL}:embedContent?key=${process.env.GOOGLE_API_KEY}`
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: EMBEDDING_MODEL,
-      input: text,
+      model: `models/${EMBEDDING_MODEL}`,
+      content: {
+        parts: [{
+          text: text
+        }]
+      }
     }),
   })
 
   if (!response.ok) {
     const error = await response.text()
-    throw new Error(`OpenAI API error: ${response.status} - ${error}`)
+    throw new Error(`Google Gemini API error: ${response.status} - ${error}`)
   }
 
   const data = await response.json()
-  return data.data[0].embedding
+  return data.embedding.values
 }
 
 // Fonction pour préparer le texte
@@ -154,12 +159,13 @@ async function getExperiences() {
 
 // Fonction principale
 async function main() {
-  console.log('🚀 Génération des embeddings avec OpenAI...\n')
+  console.log('🚀 Génération des embeddings avec Google Gemini (GRATUIT)...\n')
 
-  // Vérifier que la clé API OpenAI est définie
-  if (!process.env.OPENAI_API_KEY) {
-    console.error('❌ Erreur: OPENAI_API_KEY n\'est pas défini dans les variables d\'environnement')
-    console.error('   Ajoutez dans .env.local: OPENAI_API_KEY=votre_clé')
+  // Vérifier que la clé API Google est définie
+  if (!process.env.GOOGLE_API_KEY) {
+    console.error('❌ Erreur: GOOGLE_API_KEY n\'est pas défini dans les variables d\'environnement')
+    console.error('   Ajoutez dans .env.local: GOOGLE_API_KEY=votre_clé')
+    console.error('   Obtenez une clé gratuite sur: https://aistudio.google.com/app/apikey')
     process.exit(1)
   }
 
@@ -177,7 +183,7 @@ async function main() {
     console.log(`   Total: ${allDocuments.length} documents\n`)
 
     // Générer les embeddings
-    console.log('🔄 Génération des embeddings avec OpenAI...')
+    console.log('🔄 Génération des embeddings avec Google Gemini...')
     const embeddedDocuments = []
 
     for (let i = 0; i < allDocuments.length; i++) {
@@ -190,14 +196,14 @@ async function main() {
           ...doc,
           embedding,
         })
-        console.log(`   ✅ Succès (${embedding.length} dimensions)`)
+        console.log(`   ✅ Succès (${embedding.length} dimensions) - GRATUIT!`)
       } catch (error) {
         console.error(`   ❌ Erreur pour "${doc.metadata.title}":`, error.message)
       }
 
-      // Petit délai pour éviter de dépasser les limites de taux
+      // Petit délai pour respecter les limites de taux
       if (i < allDocuments.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 200))
+        await new Promise((resolve) => setTimeout(resolve, 300))
       }
     }
 
@@ -207,6 +213,7 @@ async function main() {
     console.log(`   ✅ Sauvegardé dans ${OUTPUT_FILE}`)
 
     console.log(`\n✨ Terminé! ${embeddedDocuments.length}/${allDocuments.length} documents avec embeddings générés.`)
+    console.log(`💰 Coût: GRATUIT (Google Gemini - 1500 requêtes/jour gratuites)`)
 
     if (embeddedDocuments.length > 0) {
       console.log(`\n📊 Prochaine étape: Lancez votre application avec 'yarn dev'`)

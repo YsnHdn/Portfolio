@@ -1,29 +1,34 @@
-// Utilitaires pour générer des embeddings avec OpenAI (API directe)
+// Utilitaires pour générer des embeddings avec Google Gemini (API directe - GRATUIT)
 
 /**
- * Générer un embedding pour un texte donné en appelant directement l'API OpenAI
+ * Générer un embedding pour un texte donné en appelant directement l'API Google Gemini
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
   try {
-    const response = await fetch('https://api.openai.com/v1/embeddings', {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${process.env.GOOGLE_API_KEY}`
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'text-embedding-3-small',
-        input: text,
+        model: 'models/text-embedding-004',
+        content: {
+          parts: [{
+            text: text
+          }]
+        }
       }),
     })
 
     if (!response.ok) {
       const error = await response.text()
-      throw new Error(`OpenAI API error: ${response.status} - ${error}`)
+      throw new Error(`Google Gemini API error: ${response.status} - ${error}`)
     }
 
     const data = await response.json()
-    return data.data[0].embedding
+    return data.embedding.values
   } catch (error) {
     console.error('Erreur lors de la génération de l\'embedding:', error)
     throw error
