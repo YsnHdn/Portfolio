@@ -4,7 +4,7 @@
  * Script pour générer les embeddings du contenu (blog posts, projets, expériences)
  * et les sauvegarder dans un fichier JSON
  *
- * Utilise OpenRouter directement avec fetch (pas de SDK)
+ * Utilise OpenAI pour les embeddings (API directe)
  */
 
 import fs from 'fs'
@@ -19,18 +19,16 @@ const __dirname = path.dirname(__filename)
 // Charger les variables d'environnement depuis .env.local
 dotenv.config({ path: path.join(__dirname, '../.env.local') })
 
-const EMBEDDING_MODEL = 'openai/text-embedding-3-small'
+const EMBEDDING_MODEL = 'text-embedding-3-small'
 const OUTPUT_FILE = path.join(__dirname, '../public/embeddings.json')
 
-// Fonction pour générer un embedding avec l'API OpenRouter directement
+// Fonction pour générer un embedding avec l'API OpenAI directement
 async function generateEmbedding(text) {
-  const response = await fetch('https://openrouter.ai/api/v1/embeddings', {
+  const response = await fetch('https://api.openai.com/v1/embeddings', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://yassine-handane.vercel.app',
-      'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Yassine Handane Portfolio',
     },
     body: JSON.stringify({
       model: EMBEDDING_MODEL,
@@ -40,7 +38,7 @@ async function generateEmbedding(text) {
 
   if (!response.ok) {
     const error = await response.text()
-    throw new Error(`OpenRouter API error: ${response.status} - ${error}`)
+    throw new Error(`OpenAI API error: ${response.status} - ${error}`)
   }
 
   const data = await response.json()
@@ -156,12 +154,12 @@ async function getExperiences() {
 
 // Fonction principale
 async function main() {
-  console.log('🚀 Génération des embeddings avec OpenRouter (API directe)...\n')
+  console.log('🚀 Génération des embeddings avec OpenAI...\n')
 
-  // Vérifier que la clé API OpenRouter est définie
-  if (!process.env.OPENROUTER_API_KEY) {
-    console.error('❌ Erreur: OPENROUTER_API_KEY n\'est pas défini dans les variables d\'environnement')
-    console.error('   Créez un fichier .env.local avec: OPENROUTER_API_KEY=votre_clé')
+  // Vérifier que la clé API OpenAI est définie
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('❌ Erreur: OPENAI_API_KEY n\'est pas défini dans les variables d\'environnement')
+    console.error('   Ajoutez dans .env.local: OPENAI_API_KEY=votre_clé')
     process.exit(1)
   }
 
@@ -179,7 +177,7 @@ async function main() {
     console.log(`   Total: ${allDocuments.length} documents\n`)
 
     // Générer les embeddings
-    console.log('🔄 Génération des embeddings avec OpenRouter...')
+    console.log('🔄 Génération des embeddings avec OpenAI...')
     const embeddedDocuments = []
 
     for (let i = 0; i < allDocuments.length; i++) {

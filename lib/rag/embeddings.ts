@@ -1,29 +1,25 @@
-// Utilitaires pour générer des embeddings avec OpenRouter (API directe)
-
-import { MODELS } from './config'
+// Utilitaires pour générer des embeddings avec OpenAI (API directe)
 
 /**
- * Générer un embedding pour un texte donné en appelant directement l'API OpenRouter
+ * Générer un embedding pour un texte donné en appelant directement l'API OpenAI
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/embeddings', {
+    const response = await fetch('https://api.openai.com/v1/embeddings', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://yassine-handane.vercel.app',
-        'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Yassine Handane Portfolio',
       },
       body: JSON.stringify({
-        model: MODELS.embedding,
+        model: 'text-embedding-3-small',
         input: text,
       }),
     })
 
     if (!response.ok) {
       const error = await response.text()
-      throw new Error(`OpenRouter API error: ${response.status} - ${error}`)
+      throw new Error(`OpenAI API error: ${response.status} - ${error}`)
     }
 
     const data = await response.json()
