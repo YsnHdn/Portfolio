@@ -7,8 +7,8 @@ export const openrouter = createOpenAI({
   apiKey: process.env.OPENROUTER_API_KEY || '',
   baseURL: 'https://openrouter.ai/api/v1',
   headers: {
-    'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || '',
-    'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Portfolio',
+    'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://yassine-handane.vercel.app',
+    'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Yassine Handane Portfolio',
   },
 })
 
