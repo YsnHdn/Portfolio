@@ -78,7 +78,7 @@ ${document.content}
       .join('\n\n')
 
     // Générer la réponse avec streaming
-    const result = streamText({
+    const result = await streamText({
       model: openrouter(MODELS.chat),
       system: `Tu es un assistant spécialisé pour répondre aux questions sur le portfolio, les projets et le blog de Yassine Handane, un ingénieur AI/ML passionné.
 
