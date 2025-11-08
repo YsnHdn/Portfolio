@@ -1,7 +1,6 @@
-import { streamText } from 'ai'
 import { VectorStore } from '@/lib/rag/vectorStore'
 import { generateEmbedding } from '@/lib/rag/embeddings'
-import { openrouter, MODELS, checkApiKey } from '@/lib/rag/config'
+import { MODELS, checkApiKey } from '@/lib/rag/config'
 import type { EmbeddedDocument } from '@/lib/rag/types'
 import fs from 'fs'
 import path from 'path'
@@ -77,10 +76,8 @@ ${document.content}
       })
       .join('\n\n')
 
-    // Générer la réponse avec streaming
-    const result = streamText({
-      model: openrouter(MODELS.chat),
-      system: `Tu es un assistant spécialisé pour répondre aux questions sur le portfolio, les projets et le blog de Yassine Handane, un ingénieur AI/ML passionné.
+    // Générer la réponse avec OpenRouter en streaming
+    const systemPrompt = `Tu es un assistant spécialisé pour répondre aux questions sur le portfolio, les projets et le blog de Yassine Handane, un ingénieur AI/ML passionné.
 
 Utilise UNIQUEMENT les informations fournies dans le contexte ci-dessous pour répondre à la question de l'utilisateur.
 
@@ -95,13 +92,42 @@ Règles:
 - Cite les sources (titres des articles/projets) quand pertinent
 - Si tu mentionnes un article ou projet, inclus l'URL si disponible
 - Reste professionnel et informatif
-- Montre l'expertise de Yassine en AI/ML dans tes réponses`,
-      prompt: message,
-      temperature: 0.7,
-      maxTokens: 1000,
+- Montre l'expertise de Yassine en AI/ML dans tes réponses`
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://yassine-handane.vercel.app',
+        'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Yassine Handane Portfolio',
+      },
+      body: JSON.stringify({
+        model: MODELS.chat,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message },
+        ],
+        temperature: 0.7,
+        max_tokens: 1000,
+        stream: true,
+      }),
     })
 
-    return result.toTextStreamResponse()
+    if (!response.ok) {
+      const error = await response.text()
+      console.error('Erreur OpenRouter:', error)
+      throw new Error(`OpenRouter API error: ${response.status}`)
+    }
+
+    // Retourner le stream directement
+    return new Response(response.body, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+      },
+    })
   } catch (error) {
     console.error('Erreur dans l\'API RAG:', error)
     return new Response('Erreur lors du traitement de la requête', { status: 500 })

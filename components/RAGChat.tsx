@@ -95,11 +95,19 @@ export default function RAGChat() {
         const lines = chunk.split('\n')
 
         for (const line of lines) {
-          if (line.startsWith('0:')) {
+          // Format SSE d'OpenRouter: "data: {...}"
+          if (line.startsWith('data: ')) {
+            const data = line.substring(6) // Enlever "data: "
+
+            // Ignorer le message [DONE]
+            if (data === '[DONE]') continue
+
             try {
-              const data = JSON.parse(line.substring(2))
-              if (data && typeof data === 'string') {
-                assistantMessage.content += data
+              const parsed = JSON.parse(data)
+              const content = parsed.choices?.[0]?.delta?.content
+
+              if (content) {
+                assistantMessage.content += content
                 setMessages((prev) => {
                   const newMessages = [...prev]
                   newMessages[newMessages.length - 1] = { ...assistantMessage }
