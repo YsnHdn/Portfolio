@@ -4,15 +4,13 @@
  * Script pour générer les embeddings du contenu (blog posts, projets, expériences)
  * et les sauvegarder dans un fichier JSON
  *
- * Utilise OpenRouter pour générer les embeddings
+ * Utilise OpenRouter directement avec fetch (pas de SDK)
  */
 
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import matter from 'gray-matter'
-import { createOpenAI } from '@ai-sdk/openai'
-import { embed } from 'ai'
 import dotenv from 'dotenv'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -21,27 +19,32 @@ const __dirname = path.dirname(__filename)
 // Charger les variables d'environnement depuis .env.local
 dotenv.config({ path: path.join(__dirname, '../.env.local') })
 
-// Configuration OpenRouter
-const openrouter = createOpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY || '',
-  baseURL: 'https://openrouter.ai/api/v1',
-  headers: {
-    'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://yassine-handane.vercel.app',
-    'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Yassine Handane Portfolio',
-  },
-})
-
-// IMPORTANT : Préfixer avec openai/ pour OpenRouter
 const EMBEDDING_MODEL = 'openai/text-embedding-3-small'
 const OUTPUT_FILE = path.join(__dirname, '../public/embeddings.json')
 
-// Fonction pour générer un embedding
+// Fonction pour générer un embedding avec l'API OpenRouter directement
 async function generateEmbedding(text) {
-  const { embedding } = await embed({
-    model: openrouter.embedding(EMBEDDING_MODEL),
-    value: text,
+  const response = await fetch('https://openrouter.ai/api/v1/embeddings', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://yassine-handane.vercel.app',
+      'X-Title': process.env.NEXT_PUBLIC_SITE_NAME || 'Yassine Handane Portfolio',
+    },
+    body: JSON.stringify({
+      model: EMBEDDING_MODEL,
+      input: text,
+    }),
   })
-  return embedding
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`OpenRouter API error: ${response.status} - ${error}`)
+  }
+
+  const data = await response.json()
+  return data.data[0].embedding
 }
 
 // Fonction pour préparer le texte
@@ -153,7 +156,7 @@ async function getExperiences() {
 
 // Fonction principale
 async function main() {
-  console.log('🚀 Génération des embeddings avec OpenRouter...\n')
+  console.log('🚀 Génération des embeddings avec OpenRouter (API directe)...\n')
 
   // Vérifier que la clé API OpenRouter est définie
   if (!process.env.OPENROUTER_API_KEY) {
@@ -176,7 +179,7 @@ async function main() {
     console.log(`   Total: ${allDocuments.length} documents\n`)
 
     // Générer les embeddings
-    console.log('🔄 Génération des embeddings...')
+    console.log('🔄 Génération des embeddings avec OpenRouter...')
     const embeddedDocuments = []
 
     for (let i = 0; i < allDocuments.length; i++) {
@@ -189,6 +192,7 @@ async function main() {
           ...doc,
           embedding,
         })
+        console.log(`   ✅ Succès (${embedding.length} dimensions)`)
       } catch (error) {
         console.error(`   ❌ Erreur pour "${doc.metadata.title}":`, error.message)
       }
@@ -204,8 +208,13 @@ async function main() {
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(embeddedDocuments, null, 2))
     console.log(`   ✅ Sauvegardé dans ${OUTPUT_FILE}`)
 
-    console.log(`\n✨ Terminé! ${embeddedDocuments.length} documents avec embeddings générés.`)
-    console.log(`\n📊 Prochaine étape: Lancez votre application avec 'yarn dev'`)
+    console.log(`\n✨ Terminé! ${embeddedDocuments.length}/${allDocuments.length} documents avec embeddings générés.`)
+
+    if (embeddedDocuments.length > 0) {
+      console.log(`\n📊 Prochaine étape: Lancez votre application avec 'yarn dev'`)
+    } else {
+      console.log(`\n⚠️  Aucun embedding généré. Vérifiez les erreurs ci-dessus.`)
+    }
   } catch (error) {
     console.error('\n❌ Erreur:', error)
     process.exit(1)
